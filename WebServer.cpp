@@ -62,10 +62,10 @@ WebServer::WebServer(int port) {
 }
 
 //WiFiServer based
-void WebServer::RootDoc(WiFiClient client1){};
+void WebServer::RootDoc(WiFiClient client1) {};
 void WebServer::RootDoc()
 {
-    WiFiClient client = server->available();   // Listen for incoming clients
+  WiFiClient client = server->available();   // Listen for incoming clients
 
   if (client) {                             // If a new client connects,
     Serial.println("New Client.");          // print a message out in the serial port
@@ -73,7 +73,7 @@ void WebServer::RootDoc()
     currentTime = millis();
     previousTime = currentTime;
     while (client.connected() && currentTime - previousTime <= timeoutTime) { // loop while the client's connected
-      currentTime = millis();         
+      currentTime = millis();
       if (client.available()) {             // if there's bytes to read from the client,
         char c = client.read();             // read a byte, then
         Serial.write(c);                    // print it out the serial monitor
@@ -88,102 +88,110 @@ void WebServer::RootDoc()
             client.println("Content-type:text/html");
             client.println("Connection: close");
             client.println();
-            
-            // turns the GPIOs on and off
+
+            // turns the Switchs on and off
             if (header.indexOf("GET /1/on") >= 0) {
-              Serial.println("GPIO 1 on");
+              Serial.println("Switch 1 on");
               output1State = "on";
               digitalWrite(output1, HIGH);
             } else if (header.indexOf("GET /1/off") >= 0) {
-              Serial.println("GPIO 1 off");
+              Serial.println("Switch 1 off");
               output1State = "off";
               digitalWrite(output1, LOW);
             }
             else if (header.indexOf("GET /2/on") >= 0) {
-              Serial.println("GPIO 2 on");
+              Serial.println("Switch 2 on");
               output2State = "on";
               digitalWrite(output2, HIGH);
             } else if (header.indexOf("GET /2/off") >= 0) {
-              Serial.println("GPIO 2 off");
+              Serial.println("Switch 2 off");
               output2State = "off";
               digitalWrite(output2, LOW);
             }
-            
+
             else if (header.indexOf("GET /3/on") >= 0) {
-              Serial.println("GPIO 3 on");
+              Serial.println("Switch 3 on");
               output3State = "on";
               digitalWrite(output3, HIGH);
             } else if (header.indexOf("GET /3/off") >= 0) {
-              Serial.println("GPIO 3 off");
+              Serial.println("Switch 3 off");
               output3State = "off";
               digitalWrite(output3, LOW);
             }
-            
+
             else if (header.indexOf("GET /4/on") >= 0) {
-              Serial.println("GPIO 4 on");
+              Serial.println("Switch 4 on");
               output4State = "on";
               digitalWrite(output4, HIGH);
             } else if (header.indexOf("GET /4/off") >= 0) {
-              Serial.println("GPIO 4 off");
+              Serial.println("Switch 4 off");
               output4State = "off";
               digitalWrite(output4, LOW);
             }
-            
+
             // Display the HTML web page
             client.println("<!DOCTYPE html><html>");
             client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             client.println("<link rel=\"icon\" href=\"data:,\">");
-            // CSS to style the on/off buttons 
+            // CSS to style the on/off buttons
             // Feel free to change the background-color and font-size attributes to fit your preferences
+            client.println("<style>table {display: table; border-spacing: 15px; text-align: center; border: 2px solid green; background-color: #f1f1c1; align:center; } </style>");
             client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
             client.println(".button { background-color: #195B6A; border: none; color: white; padding: 16px 40px;");
             client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
-            client.println(".button2 {background-color: #77878A;}</style></head>");
-            
+            client.println(".button2 {background-color: #77878A;} h1 {  color: rgb(0, 221, 152); font-family: verdana; font-size: 300%;}</style></head>");
+
             // Web Page Heading
             client.println("<body><h1>Amit IOT Switch</h1>");
-            
-            
+
+
+
+            client.println("<table align='center'><tr><td>");
+
+            // Display current state, and ON/OFF buttons for Switch 1
+            client.println("Switch 1 - State " + output1State + "");
+            // If the output1State is off, it displays the ON button
+            if (output1State == "off") {
+              client.println("<a href=\"/1/on\"><button class=\"button\">ON</button></a>");
+            } else {
+              client.println("<a href=\"/1/off\"><button class=\"button button2\">OFF</button></a>");
+            }
+
+            client.println("</td><td>");
+
+            // Display current state, and ON/OFF buttons for Switch 2
+
+            client.println("Switch 2 - State " + output2State + "");
+            // If the output2State is off, it displays the ON button
+            if (output2State == "off") {
+              client.println("<a href=\"/2/on\"><button class=\"button\">ON</button></a>");
+            } else {
+              client.println("<a href=\"/2/off\"><button class=\"button button2\">OFF</button></a></p>");
+            }
+            client.println("</td></tr><tr><td>");
+
+            // Display current state, and ON/OFF buttons for Switch 3
+            client.println("Switch 3 - State " + output3State + "");
+            // If the output3State is off, it displays the ON button
+            if (output3State == "off") {
+              client.println("<a href=\"/3/on\"><button class=\"button\">ON</button></a>");
+            } else {
+              client.println("<a href=\"/3/off\"><button class=\"button button2\">OFF</button></a>");
+            }
+            client.println("</td><td>");
+            // Display current state, and ON/OFF buttons for Switch 4
+
+            client.println("Switch 4 - State " + output4State + "");
+            // If the output4State is off, it displays the ON button
+            if (output4State == "off") {
+              client.println("<a href=\"/4/on\"><button class=\"button\">ON</button></a>");
+            } else {
+              client.println("<a href=\"/4/off\"><button class=\"button button2\">OFF</button></a>");
+            }
+            client.println("</td></tr></table>");
+
             client.println("</body></html>");
-            
-            // Display current state, and ON/OFF buttons for GPIO 1  
-            client.println("<p>GPIO 1 - State " + output1State + "</p>");
-            // If the output1State is off, it displays the ON button       
-            if (output1State=="off") {
-              client.println("<p><a href=\"/1/on\"><button class=\"button\">ON</button></a></p>");
-            } else {
-              client.println("<p><a href=\"/1/off\"><button class=\"button button2\">OFF</button></a></p>");
-            } 
-               
-            // Display current state, and ON/OFF buttons for GPIO 2  
-            
-            client.println("<p>GPIO 2 - State " + output2State + "</p>");
-            // If the output2State is off, it displays the ON button       
-            if (output2State=="off") {
-              client.println("<p><a href=\"/2/on\"><button class=\"button\">ON</button></a></p>");
-            } else {
-              client.println("<p><a href=\"/2/off\"><button class=\"button button2\">OFF</button></a></p>");
-            }
-            // Display current state, and ON/OFF buttons for GPIO 3  
-            client.println("<p>GPIO 3 - State " + output3State + "</p>");
-            // If the output3State is off, it displays the ON button       
-            if (output3State=="off") {
-              client.println("<p><a href=\"/3/on\"><button class=\"button\">ON</button></a></p>");
-            } else {
-              client.println("<p><a href=\"/3/off\"><button class=\"button button2\">OFF</button></a></p>");
-            } 
-               
-            // Display current state, and ON/OFF buttons for GPIO 4  
-            
-            client.println("<p>GPIO 4 - State " + output4State + "</p>");
-            // If the output4State is off, it displays the ON button       
-            if (output4State=="off") {
-              client.println("<p><a href=\"/4/on\"><button class=\"button\">ON</button></a></p>");
-            } else {
-              client.println("<p><a href=\"/4/off\"><button class=\"button button2\">OFF</button></a></p>");
-            }
-                      
-            
+
             // The HTTP response ends with another blank line
             client.println();
             // Break out of the while loop

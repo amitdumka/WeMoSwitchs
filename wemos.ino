@@ -19,7 +19,7 @@ Witty wittyB;
 
 WeMoSwitch *weMo;
 WebServer *webServer;
-
+static const double DeviceId=5458979879;
 
 
 
