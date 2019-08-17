@@ -13,43 +13,41 @@
 #include "wemoswitch.h"
 #include "WebServer.h"
 
-
-
 Witty wittyB;
-
 WeMoSwitch *weMo;
 WebServer *webServer;
-static const double DeviceId=5458979879;
-
-
+static const double DeviceId = 5458979879;
 
 void setup()
 {
   Serial.begin(9600);
+
   wittyB.InitWitty();
-  weMo= new WeMoSwitch(wittyB);
+  weMo = new WeMoSwitch(wittyB);
   Serial.println("Witty Board Init  done");
-  webServer= new WebServer(80);
+
+  webServer = new WebServer(80);
   webServer->StartWebServer();
+  
   weMo->initWemoSwitch();
- 
   Serial.println("Wemos Switch init done");
-  if (MDNS.begin("amitiot")) {
+
+  if (MDNS.begin("amitiot"))
+  {
     Serial.println("MDNS responder started: amitiot");
     // Add service to MDNS-SD
-  MDNS.addService("http", "tcp", 80);
+    MDNS.addService("http", "tcp", 80);
   }
 
-
-}// end of Setup
+} // end of Setup
 
 void loop()
 {
-   MDNS.update();
- // WiFiClient client = webServer->server->available(); // Listen for incoming clients
-    webServer->RootDoc();
+  MDNS.update();
+  // WiFiClient client = webServer->server->available(); // Listen for incoming clients
+  webServer->IndexPage();
   weMo->wemoSwitchLoop();
-  if(wittyB.isButtonPressed()==LOW)
+  if (wittyB.isButtonPressed() == LOW)
   {
     Serial.println("Button is pressed...");
     delay(200);
@@ -59,15 +57,12 @@ void loop()
     //TODO: where first need to delete the ref then call init function
     Serial.println("Reconnecting Switch....");
     delete weMo;
-    if(weMo==NULL)
-      weMo= new WeMoSwitch(wittyB);
+    if (weMo == NULL)
+      weMo = new WeMoSwitch(wittyB);
     weMo->initWemoSwitch();
-    
+
     //delay(2000);
-   
   }
 }
 
 
-
-// connect to wifi – returns true if successful or false if not
