@@ -1,5 +1,6 @@
 #ifndef WITTY_H
 #define WITTY_H
+#include "WeMo.h"
 #include <functional>
 
 #include <Arduino.h>
@@ -18,6 +19,7 @@ public:
   static const int RedLed;
   static const int GreenLed;
   static const int BlueLed;
+
   static int btn_Status;
 
   //Wifi Connection
@@ -25,11 +27,8 @@ public:
   // Change this before you flash
   //TODO: making then can set by web page , api or app
 
-  const char *ssid = "AmitKr";
-  const char *password = "12345678";
-
-  const char *host = "Amit_IOT";
   static bool wifiConnected;
+
   bool connectWifi();
 
   void InitWitty();

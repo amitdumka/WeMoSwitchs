@@ -6,20 +6,22 @@ const int Witty::RedLed = D8;
 const int Witty::GreenLed = D6;
 const int Witty::BlueLed = D7;
 int Witty::btn_Status = HIGH;
+
 bool Witty::wifiConnected = false;
 
 void Witty::InitWitty()
 {
-
   //Wity Init
   pinMode(RedLed, OUTPUT);
   pinMode(GreenLed, OUTPUT);
   pinMode(BlueLed, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+
   digitalWrite(BlueLed, HIGH);
   Serial.println("Witty Init  done");
   delay(2000);
   digitalWrite(BlueLed, LOW);
+
   int c = 3;
   do
   {
@@ -58,12 +60,10 @@ bool Witty::setLedColor(int r, int g, int b)
 
 bool Witty::connectWifi()
 {
-
   boolean state = true;
   int i = 0;
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  Serial.println("");
+  WiFi.mode(WeMo::WiFiMode);
+  WiFi.begin(WeMo::SSID, WeMo::password);
   Serial.println("Connecting to WiFi");
 
   // Wait for connection
@@ -85,10 +85,11 @@ bool Witty::connectWifi()
   {
     Serial.println("");
     Serial.print("Connected to ");
-    Serial.println(ssid);
+    Serial.println(WeMo::SSID);
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
     digitalWrite(GreenLed, HIGH);
+    digitalWrite(RedLed, LOW);
   }
   else
   {
@@ -114,7 +115,8 @@ bool Witty::HandelButton(CallbackFunction cb)
 bool Witty::ResetDevice()
 {
   //TODO: add code to reset device.
-  ESP.restart();
+  //ESP.restart();
+  ESP.reset();
   return true;
 }
 

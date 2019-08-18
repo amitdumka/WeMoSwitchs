@@ -6,6 +6,26 @@ Switch::Switch()
 {
   Serial.println("default constructor called");
 }
+Switch::Switch(String alexaInvokeName, unsigned int port, CallbackFunctionIn oncb, CallbackFunctionIn offcb, int index)
+{
+  uint32_t chipId = ESP.getChipId();
+  char uuid[64];
+  sprintf_P(uuid, PSTR("38323636-4558-4dda-9188-cda0e6%02x%02x%02x"),
+            (uint16_t)((chipId >> 16) & 0xff),
+            (uint16_t)((chipId >> 8) & 0xff),
+            (uint16_t)chipId & 0xff);
+
+  serial = String(uuid);
+  persistent_uuid = "Socket-1_0-" + serial + "-" + String(port);
+
+  device_name = alexaInvokeName;
+  localPort = port;
+  onCallbackIn = oncb;
+  offCallbackIn = offcb;
+  SwitchIndex = index;
+
+  startWebServer();
+}
 
 Switch::Switch(String alexaInvokeName, unsigned int port, CallbackFunction oncb, CallbackFunction offcb)
 {
@@ -132,7 +152,11 @@ void Switch::handleUpnpControl()
     if (request.indexOf("<BinaryState>1</BinaryState>") >= 0)
     {
       Serial.println("Got Turn on request");
-      switchStatus = onCallback();
+      // TODO: Need to handle situation where index value is coming wrong. and without index value callback need to be called.
+      if (SwitchIndex >= 0)
+        switchStatus = onCallbackIn(SwitchIndex);
+      else
+        switchStatus = onCallback();
 
       sendRelayState();
     }
@@ -140,7 +164,11 @@ void Switch::handleUpnpControl()
     if (request.indexOf("<BinaryState>0</BinaryState>") >= 0)
     {
       Serial.println("Got Turn off request");
-      switchStatus = offCallback();
+      // TODO: Need to handle situation where index value is coming wrong. and without index value callback need to be called.
+      if (SwitchIndex >= 0)
+        switchStatus = offCallbackIn(SwitchIndex);
+      else
+        switchStatus = offCallback();
 
       sendRelayState();
     }
@@ -148,7 +176,7 @@ void Switch::handleUpnpControl()
 
   if (request.indexOf("GetBinaryState") >= 0)
   {
-    Serial.println("Got binary state request");
+    Serial.println("Got binary state request for "+ this->device_name);
     sendRelayState();
   }
 

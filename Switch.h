@@ -18,6 +18,10 @@ private:
         unsigned int localPort;
         CallbackFunction onCallback;
         CallbackFunction offCallback;
+        CallbackFunctionIn onCallbackIn;
+        CallbackFunctionIn offCallbackIn;
+
+        int SwitchIndex=-1;
         bool switchStatus;
 
         void startWebServer();
@@ -29,6 +33,8 @@ private:
 public:
         Switch();
         Switch(String alexaInvokeName, unsigned int port, CallbackFunction onCallback, CallbackFunction offCallback);
+        Switch(String alexaInvokeName, unsigned int port, CallbackFunctionIn onCallback, CallbackFunctionIn offCallback, int index);
+        
         ~Switch();
         String getAlexaInvokeName();
         void serverLoop();
