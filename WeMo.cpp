@@ -16,4 +16,9 @@ int WeMo::RelayPins[] = {14, 15, 03, 01};
 int WeMo::RelayPort[] = {81, 82, 83, 84};
 bool WeMo::isRelayOn[NoOfRelay] = {false, false, false, false};
 
-// void WeMo::Config()
+void WeMo::OperateRelay(int switchIndex, int onOff)
+{
+    WeMo::isRelayOn[switchIndex] = (onOff == HIGH ? true : false);
+    digitalWrite(WeMo::RelayPins[switchIndex], onOff);
+  
+}

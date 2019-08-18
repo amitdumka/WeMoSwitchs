@@ -11,7 +11,7 @@ public:
 
     static const int NoOfRelay = 4;
 
-    static int RelayStatus[NoOfRelay];
+    static int RelayStatus[NoOfRelay]; //need to check if Any use is there
     static int RelayPins[NoOfRelay];
     static String RelayNames[NoOfRelay];
     static bool isRelayOn[NoOfRelay];
@@ -39,6 +39,8 @@ public:
     static const int LastPort = 90; //Max Switch /Replay can be handle by Alexa WeMos
     
     //static void Config();
+    static void OperateRelay(int switchIndex, int onOff);
+
 };
 
 #endif

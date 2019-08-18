@@ -7,7 +7,7 @@
 #include "switch.h"
 #include "UpnpBroadcastResponder.h"
 #include "CallbackFunction.h"
-#include "WebServer.h"
+//#include "WebServer.h"
 #include "WeMo.h"
 //#include "SmartSwitch.h"
 
@@ -16,15 +16,8 @@ class WeMoSwitch
 private:
   //boolean wifiConnected = false;
   int counter = 10;
-
   Witty wittyB;
-  // Set Relay Pins
-  // int relayOnePin = 14;
-  // int relayTwoPin = 15;
-  // int relayThreePin = 03;
-  // int relayFourPin = 01;
 
-  
 public:
 
   Switch *relaySwitch[WeMo::NoOfRelay];

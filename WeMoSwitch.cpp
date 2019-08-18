@@ -79,6 +79,7 @@ bool WeMoSwitch::SwitchOff(int index)
   Serial.print(index+1);
   Serial.println(" is turning off");
   WeMo::isRelayOn[index] = false;
+  WeMo::OperateRelay(index,LOW);
   return WeMo::isRelayOn[index];
   
 }
@@ -89,6 +90,7 @@ bool WeMoSwitch::SwitchOn(int index)
   Serial.print(index+1);
   Serial.println(" is turning on");
   WeMo::isRelayOn[index] = true;
+  WeMo::OperateRelay(index,HIGH);
   return WeMo::isRelayOn[index];
   
 }
