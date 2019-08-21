@@ -8,6 +8,7 @@ const int Witty::BlueLed = D7;
 int Witty::btn_Status = HIGH;
 
 bool Witty::wifiConnected = false;
+//Witty::Witty(){}
 
 void Witty::InitWitty()
 {
@@ -26,6 +27,12 @@ void Witty::InitWitty()
   do
   {
     //int c=3;
+    if (wifiConnected)
+    {
+      LedStatus(wifiConnected);
+      break;
+    }
+
     wifiConnected = connectWifi();
     if (wifiConnected)
       c = 0;
@@ -34,7 +41,53 @@ void Witty::InitWitty()
 
   } while (c > 0);
 
-} // end of Setup
+} // end of Init
+
+void Witty::InitWitty(bool isConnected, bool isConfiged)
+{
+  //Wity Init
+  pinMode(RedLed, OUTPUT);
+  pinMode(GreenLed, OUTPUT);
+  pinMode(BlueLed, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+
+  digitalWrite(BlueLed, HIGH);
+  Serial.println("Witty Init  done");
+  delay(2000);
+  digitalWrite(BlueLed, LOW);
+  if (isConfiged)
+  {
+    // Read all relay sate and set it  here
+  }
+
+  if (!isConnected)
+  {
+    isConnected = CallWiFiManager(false);
+    wifiConnected = isConnected;
+  }
+  LedStatus(isConnected);
+}
+void Witty::InitWitty(bool isConnected)
+{
+  //Wity Init
+  pinMode(RedLed, OUTPUT);
+  pinMode(GreenLed, OUTPUT);
+  pinMode(BlueLed, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+
+  digitalWrite(BlueLed, HIGH);
+  Serial.println("Witty Init  done");
+  delay(2000);
+  digitalWrite(BlueLed, LOW);
+
+  if (!isConnected)
+    {
+      digitalWrite(BlueLed, HIGH);// option to make blinking till become green
+      wifiConnected = CallWiFiManager(false);
+    }
+    LedStatus(wifiConnected);
+
+} // end of Init(true)
 
 void Witty::SetLedDigital(int r, int g, int b)
 {
@@ -81,23 +134,8 @@ bool Witty::connectWifi()
     i++;
   }
   digitalWrite(BlueLed, LOW);
-  if (state)
-  {
-    Serial.println("");
-    Serial.print("Connected to ");
-    Serial.println(WeMo::SSID);
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
-    digitalWrite(GreenLed, HIGH);
-    digitalWrite(RedLed, LOW);
-  }
-  else
-  {
-    Serial.println("");
-    Serial.println("Connection failed.");
-    digitalWrite(RedLed, HIGH);
-  }
-
+  LedStatus(state);
+  WeMo::wifiConnected=wifiConnected=state;
   return state;
 }
 
@@ -127,4 +165,25 @@ bool Witty::ReconnectWifi()
     wifiConnected = connectWifi();
   }
   return wifiConnected;
+}
+
+void Witty::LedStatus(bool isConnected)
+{
+  digitalWrite(BlueLed, LOW);
+  if (isConnected)
+  {
+    Serial.println("");
+    Serial.print("Connected to ");
+    Serial.println(WiFi.SSID());
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+    digitalWrite(GreenLed, HIGH);
+    digitalWrite(RedLed, LOW);
+  }
+  else
+  {
+    Serial.println("");
+    Serial.println("Connection failed.");
+    digitalWrite(RedLed, HIGH);
+  }
 }

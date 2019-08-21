@@ -23,7 +23,7 @@ void setup()
 {
   Serial.begin(9600);
 
-  wittyB.InitWitty();
+  wittyB.InitWitty(false);
   weMo = new WeMoSwitch(wittyB);
   Serial.println("Witty Board Init  done");
 
@@ -45,8 +45,7 @@ void setup()
 void loop()
 {
   MDNS.update();
-  // WiFiClient client = webServer->server->available(); // Listen for incoming clients
-  webServer->IndexPage();
+  webServer->IndexPage(); // WebServer
   weMo->wemoSwitchLoop();
   if (wittyB.isButtonPressed() == LOW)
   {

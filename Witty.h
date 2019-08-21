@@ -8,11 +8,18 @@
 #include <ESP8266WebServer.h>
 #include <WiFiUDP.h>
 
+#include <WiFiManager.h>
+
 #include "CallbackFunction.h"
+#include "Util.h"
 // By Amit Kumar
 
 class Witty
 {
+
+private:
+  //WiFiManager wifiManager;
+
 public:
   static const int BUTTON_PIN; // Define pin the button is connected to
   static const int LDR_PIN;    // Define the analog pin the LDR is connected to
@@ -30,8 +37,9 @@ public:
   static bool wifiConnected;
 
   bool connectWifi();
-
   void InitWitty();
+  void InitWitty(bool isConnected);
+  void InitWitty(bool isConnected, bool isConfiged);
   void SetLedDigital(int r, int g, int b);
 
   void SetLedAnalog(int r, int g, int b);
@@ -41,6 +49,7 @@ public:
   bool HandelButton(CallbackFunction cb);
   bool ResetDevice();
   bool ReconnectWifi();
+  void LedStatus(bool isConnecte);
 };
 
 #endif
