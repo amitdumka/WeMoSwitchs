@@ -1,27 +1,20 @@
 #include "Witty.h"
 
-const int Witty::BUTTON_PIN = 4; // Define pin the button is connected to
-const int Witty::LDR_PIN = A0;   // Define the analog pin the LDR is connected to
-const int Witty::RedLed = D8;
-const int Witty::GreenLed = D6;
-const int Witty::BlueLed = D7;
 int Witty::btn_Status = HIGH;
-
 bool Witty::wifiConnected = false;
-//Witty::Witty(){}
 
 void Witty::InitWitty()
 {
   //Wity Init
-  pinMode(RedLed, OUTPUT);
-  pinMode(GreenLed, OUTPUT);
-  pinMode(BlueLed, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+  pinMode(WeMo::RedLed, OUTPUT);
+  pinMode(WeMo::GreenLed, OUTPUT);
+  pinMode(WeMo::BlueLed, OUTPUT);
+  pinMode(WeMo::BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
 
-  digitalWrite(BlueLed, HIGH);
+  digitalWrite(WeMo::BlueLed, HIGH);
   Serial.println("Witty Init  done");
   delay(2000);
-  digitalWrite(BlueLed, LOW);
+  digitalWrite(WeMo::BlueLed, LOW);
 
   int c = 3;
   do
@@ -46,15 +39,15 @@ void Witty::InitWitty()
 void Witty::InitWitty(bool isConnected, bool isConfiged)
 {
   //Wity Init
-  pinMode(RedLed, OUTPUT);
-  pinMode(GreenLed, OUTPUT);
-  pinMode(BlueLed, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+  pinMode(WeMo::RedLed, OUTPUT);
+  pinMode(WeMo::GreenLed, OUTPUT);
+  pinMode(WeMo::BlueLed, OUTPUT);
+  pinMode(WeMo::BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
 
-  digitalWrite(BlueLed, HIGH);
+  digitalWrite(WeMo::BlueLed, HIGH);
   Serial.println("Witty Init  done");
   delay(2000);
-  digitalWrite(BlueLed, LOW);
+  digitalWrite(WeMo::BlueLed, LOW);
   if (isConfiged)
   {
     // Read all relay sate and set it  here
@@ -70,19 +63,19 @@ void Witty::InitWitty(bool isConnected, bool isConfiged)
 void Witty::InitWitty(bool isConnected)
 {
   //Wity Init
-  pinMode(RedLed, OUTPUT);
-  pinMode(GreenLed, OUTPUT);
-  pinMode(BlueLed, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+  pinMode(WeMo::RedLed, OUTPUT);
+  pinMode(WeMo::GreenLed, OUTPUT);
+  pinMode(WeMo::BlueLed, OUTPUT);
+  pinMode(WeMo::BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
 
-  digitalWrite(BlueLed, HIGH);
+  digitalWrite(WeMo::BlueLed, HIGH);
   Serial.println("Witty Init  done");
   delay(2000);
-  digitalWrite(BlueLed, LOW);
+  digitalWrite(WeMo::BlueLed, LOW);
 
   if (!isConnected)
     {
-      digitalWrite(BlueLed, HIGH);// option to make blinking till become green
+      digitalWrite(WeMo::BlueLed, HIGH);// option to make blinking till become green
       wifiConnected = CallWiFiManager(false);
     }
     LedStatus(wifiConnected);
@@ -91,23 +84,23 @@ void Witty::InitWitty(bool isConnected)
 
 void Witty::SetLedDigital(int r, int g, int b)
 {
-  digitalWrite(RedLed, r);
-  digitalWrite(GreenLed, g);
-  digitalWrite(BlueLed, b);
+  digitalWrite(WeMo::RedLed, r);
+  digitalWrite(WeMo::GreenLed, g);
+  digitalWrite(WeMo::BlueLed, b);
 }
 
 void Witty::SetLedAnalog(int r, int g, int b)
 {
-  analogWrite(RedLed, r);
-  analogWrite(GreenLed, g);
-  analogWrite(BlueLed, b);
+  analogWrite(WeMo::RedLed, r);
+  analogWrite(WeMo::GreenLed, g);
+  analogWrite(WeMo::BlueLed, b);
 }
 
 bool Witty::setLedColor(int r, int g, int b)
 {
-  analogWrite(RedLed, random(r, 1023));
-  analogWrite(GreenLed, random(g, 1023));
-  analogWrite(BlueLed, random(b, 1023));
+  analogWrite(WeMo::RedLed, random(r, 1023));
+  analogWrite(WeMo::GreenLed, random(g, 1023));
+  analogWrite(WeMo::BlueLed, random(b, 1023));
   return true;
 }
 
@@ -125,7 +118,7 @@ bool Witty::connectWifi()
   {
     delay(500);
     Serial.print(".");
-    analogWrite(BlueLed, random(0, 1023));
+    analogWrite(WeMo::BlueLed, random(0, 1023));
     if (i > 10)
     {
       state = false;
@@ -133,7 +126,7 @@ bool Witty::connectWifi()
     }
     i++;
   }
-  digitalWrite(BlueLed, LOW);
+  digitalWrite(WeMo::BlueLed, LOW);
   LedStatus(state);
   WeMo::wifiConnected=wifiConnected=state;
   return state;
@@ -142,8 +135,7 @@ bool Witty::connectWifi()
 int Witty::isButtonPressed()
 {
   //Call this function in loop with better use case
-
-  return digitalRead(BUTTON_PIN);
+  return digitalRead(WeMo::BUTTON);
 }
 bool Witty::HandelButton(CallbackFunction cb)
 {
@@ -169,7 +161,7 @@ bool Witty::ReconnectWifi()
 
 void Witty::LedStatus(bool isConnected)
 {
-  digitalWrite(BlueLed, LOW);
+  digitalWrite(WeMo::BlueLed, LOW);
   if (isConnected)
   {
     Serial.println("");
@@ -177,13 +169,13 @@ void Witty::LedStatus(bool isConnected)
     Serial.println(WiFi.SSID());
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
-    digitalWrite(GreenLed, HIGH);
-    digitalWrite(RedLed, LOW);
+    digitalWrite(WeMo::GreenLed, HIGH);
+    digitalWrite(WeMo::RedLed, LOW);
   }
   else
   {
     Serial.println("");
     Serial.println("Connection failed.");
-    digitalWrite(RedLed, HIGH);
+    digitalWrite(WeMo::RedLed, HIGH);
   }
 }

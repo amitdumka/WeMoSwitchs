@@ -3,9 +3,7 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
-// //needed for library
-// #include <DNSServer.h>
-// #include <ESP8266WebServer.h>
+
 
 class WeMo
 {
