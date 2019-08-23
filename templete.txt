@@ -91,3 +91,19 @@ void setupExpamle()
         Serial.println("Config loaded");
     }
 }
+
+
+
+/// virtual switch 
+
+if(switch_status_12==(!digitalRead(INPIN_12)))// to read the status of physical switch
+     {
+        // send_status=0;
+     }
+  else
+     {
+      switch_status_12=(!digitalRead(INPIN_12));
+      Serial.println("Status 12 ");
+      send_status_12=1;
+     }
+     

@@ -1,23 +1,16 @@
 #include "WemoSwitch.h"
 
 //<<constructor>>
-WeMoSwitch::WeMoSwitch(Witty b)
+WeMoSwitch::WeMoSwitch()
 {
-  wittyB = b;
-  if (wittyB.wifiConnected == false)
-  {
-    Serial.println("Connecting Again..");
-    wittyB.wifiConnected = wittyB.connectWifi();
-  }
 
-  if (!wittyB.wifiConnected)
-    Serial.println("WifiConnected is False");
+  if (!WeMo::wifiConnected)
+    Serial.println("Wifi is not Connected");
 }
 
 //<<destructor>>
 WeMoSwitch::~WeMoSwitch()
 {
-  // wittyB=NULL;
   Serial.println("Object of Wemos disposed...");
 }
 
@@ -25,13 +18,6 @@ WeMoSwitch::~WeMoSwitch()
 bool WeMoSwitch::initWemoSwitch()
 {
   Serial.println("Initization of WemoSwitch box begin");
-  // Initialise wifi connection
-  if (WeMo::wifiConnected == false)
-  {
-    Serial.println("Wifi In Not Connected, trying to connect again....");
-    WeMo::wifiConnected = wittyB.connectWifi(); //TODO: Update here if using WiFiManager or normal Wifi Connection
-  }
-
   if (WeMo::wifiConnected)
   {
     upnpBroadcastResponder.beginUdpMulticast();
@@ -48,6 +34,7 @@ bool WeMoSwitch::initWemoSwitch()
   }
   else
   {
+    Serial.println("Wifi In Not Connected  ");
     Serial.println(" No Switches added as no Wifi Connection present.");
     Serial.println("Kindly restart by pressing restart switch!");
     return false;
@@ -58,7 +45,7 @@ bool WeMoSwitch::initWemoSwitch()
 //WeMoSwitchLoop, Must be called in Loop() function.
 void WeMoSwitch::wemoSwitchLoop()
 {
-  if (wittyB.wifiConnected)
+  if (WeMo::wifiConnected)
   {
     upnpBroadcastResponder.serverLoop();
     for (int i = 0; i < WeMo::NoOfRelay; i++)
@@ -76,23 +63,25 @@ void WeMoSwitch::wemoSwitchLoop()
 bool WeMoSwitch::SwitchOff(int index)
 {
   Serial.print("Switch ");
-  Serial.print(index+1);
+  Serial.print(index + 1);
   Serial.println(" is turning off");
   WeMo::isRelayOn[index] = false;
-  WeMo::OperateRelay(index,LOW);
-  saveRelayConfiguration(WeMo::RelayNames[index],0,WeMo::RelayNames[index]+index,false);
+  WeMo::OperateRelay(index, LOW);
+  saveRelayConfiguration(WeMo::RelayNames[index], 0, WeMo::RelayNames[index] + index, false);
   return WeMo::isRelayOn[index];
-  
 }
 
 bool WeMoSwitch::SwitchOn(int index)
 {
   Serial.print("Switch ");
-  Serial.print(index+1);
+  Serial.print(index + 1);
   Serial.println(" is turning on");
   WeMo::isRelayOn[index] = true;
-  WeMo::OperateRelay(index,HIGH);
-  saveRelayConfiguration(WeMo::RelayNames[index],1,WeMo::RelayNames[index]+index,true);
+  WeMo::OperateRelay(index, HIGH);
+  saveRelayConfiguration(WeMo::RelayNames[index], 1, WeMo::RelayNames[index] + index, true);
   return WeMo::isRelayOn[index];
-  
 }
+
+
+
+

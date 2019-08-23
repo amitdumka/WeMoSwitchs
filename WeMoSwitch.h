@@ -15,28 +15,26 @@
 class WeMoSwitch
 {
 private:
-  //boolean wifiConnected = false;
   int counter = 10;
-  Witty wittyB;
-
-public:
-
   Switch *relaySwitch[WeMo::NoOfRelay];
   UpnpBroadcastResponder upnpBroadcastResponder;
-
-  // Main Functions
-  bool initWemoSwitch();
-  void wemoSwitchLoop();
-
-  //Constructor and Destructor
-  WeMoSwitch(Witty b);
-  ~WeMoSwitch();
-
-  //Callback function for On/Off
+ //Callback function for On/Off
 static bool SwitchOn(int );
 static bool SwitchOff(int);
 
 
+ public:
+  // Main Functions
+  bool initWemoSwitch();
+  void wemoSwitchLoop();
+
+ 
+
+  //Constructor and Destructor
+  WeMoSwitch();
+  ~WeMoSwitch();
+
+ 
 
 }; //End of Class
 

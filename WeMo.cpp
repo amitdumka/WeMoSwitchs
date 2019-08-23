@@ -7,14 +7,14 @@ const char *WeMo::SSID = "AmitKr";
 const char *WeMo::password = "12345678";
 const char *WeMo::Host = "Amit_IOT";
 
-bool WeMo::wifiConnected=false;
+bool WeMo::wifiConnected = false;
 
 bool WeMo::isAPOn = false;
 bool WeMo::isAPRequired = false;
 
 const double WeMo::Device_Id = 67861;
 
-const String WeMo::AP_Name = "Amit_IOT_" + String( WeMo::Device_Id);
+const String WeMo::AP_Name = "Amit_IOT_" + String(WeMo::Device_Id);
 //Change this based on requirement
 
 String WeMo::RelayNames[] = {"Switch 1", "Switch 2", "Switch 3", "Switch 4"};
@@ -22,6 +22,7 @@ int WeMo::RelayStatus[] = {0, 0, 0, 0};
 int WeMo::RelayPins[] = {14, 15, 03, 01};
 int WeMo::RelayPort[] = {81, 82, 83, 84};
 bool WeMo::isRelayOn[NoOfRelay] = {false, false, false, false};
+int WeMo::RelayInputPin[] = {14, 15, 03, 01}; // ToDo add correct input pin here . its mistake here
 
 //start-block2
 const IPAddress WeMo::_IP = IPAddress(192, 168, 5, 1);
@@ -36,6 +37,38 @@ void WeMo::OperateRelay(int switchIndex, int onOff)
     delay(1000);                     // Wait for a second
     digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off by making the voltage HIGH
     // Make it perfect
-    saveRelayConfiguration(WeMo::RelayNames[switchIndex],onOff,WeMo::RelayNames[switchIndex]+switchIndex,WeMo::isRelayOn[switchIndex]);
-  
+    saveRelayConfiguration(WeMo::RelayNames[switchIndex], onOff, WeMo::RelayNames[switchIndex] + switchIndex, WeMo::isRelayOn[switchIndex]);
+}
+
+void WeMo::SetUpRelaySwitch()
+{
+    for (size_t i = 0; i < WeMo::NoOfRelay; i++)
+    {
+        pinMode(WeMo::RelayPins[i], OUTPUT);
+    }
+}
+void WeMo::SetUpRetroSwitch()
+{
+    for (size_t i = 0; i < WeMo::NoOfRelay; i++)
+    {
+        pinMode(WeMo::RelayInputPin[i], INPUT);
+    }
+}
+
+void WeMo::WeMoRetroSwitchLoop()
+{
+    static int relayReadValue = 0;
+    for (int i = 0; i < WeMo::NoOfRelay; i++)
+    {
+        relayReadValue = digitalRead(WeMo::RelayInputPin[i]);
+        if (relayReadValue != WeMo::RelayStatus[i])
+        {
+            WeMo::OperateRelay(i, relayReadValue);
+            WeMo::RelayStatus[i] = relayReadValue;
+            Serial.print(" Switch ");
+            Serial.print(i);
+            Serial.print(" status changed to ");
+            Serial.println(relayReadValue);
+        }
+    }
 }

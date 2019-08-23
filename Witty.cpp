@@ -1,7 +1,7 @@
 #include "Witty.h"
 
 int Witty::btn_Status = HIGH;
-bool Witty::wifiConnected = false;
+
 
 void Witty::InitWitty()
 {
@@ -20,14 +20,14 @@ void Witty::InitWitty()
   do
   {
     //int c=3;
-    if (wifiConnected)
+    if (WeMo::wifiConnected)
     {
-      LedStatus(wifiConnected);
+      LedStatus(WeMo::wifiConnected);
       break;
     }
 
-    wifiConnected = connectWifi();
-    if (wifiConnected)
+    WeMo::wifiConnected = connectWifi();
+    if (WeMo::wifiConnected)
       c = 0;
     else
       c = c - 1;
@@ -56,7 +56,7 @@ void Witty::InitWitty(bool isConnected, bool isConfiged)
   if (!isConnected)
   {
     isConnected = CallWiFiManager(false);
-    wifiConnected = isConnected;
+    WeMo::wifiConnected = isConnected;
   }
   LedStatus(isConnected);
 }
@@ -76,9 +76,9 @@ void Witty::InitWitty(bool isConnected)
   if (!isConnected)
     {
       digitalWrite(WeMo::BlueLed, HIGH);// option to make blinking till become green
-      wifiConnected = CallWiFiManager(false);
+      WeMo::wifiConnected = CallWiFiManager(false);
     }
-    LedStatus(wifiConnected);
+    LedStatus(WeMo::wifiConnected);
 
 } // end of Init(true)
 
@@ -128,7 +128,7 @@ bool Witty::connectWifi()
   }
   digitalWrite(WeMo::BlueLed, LOW);
   LedStatus(state);
-  WeMo::wifiConnected=wifiConnected=state;
+  WeMo::wifiConnected=state;
   return state;
 }
 
@@ -152,11 +152,11 @@ bool Witty::ResetDevice()
 
 bool Witty::ReconnectWifi()
 {
-  if (!wifiConnected)
+  if (!WeMo::wifiConnected)
   {
-    wifiConnected = connectWifi();
+    WeMo::wifiConnected = connectWifi();
   }
-  return wifiConnected;
+  return WeMo::wifiConnected;
 }
 
 void Witty::LedStatus(bool isConnected)

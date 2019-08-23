@@ -14,19 +14,23 @@ public:
 
     static const int NoOfRelay = 4;
 
+    static int RelayInputPin[NoOfRelay]; //input pin for retrofitting swicthes
     static int RelayStatus[NoOfRelay]; //need to check if Any use is there
+    
     static int RelayPins[NoOfRelay];
     static String RelayNames[NoOfRelay];
     static bool isRelayOn[NoOfRelay];
+    
     static int RelayPort[NoOfRelay]; //For Alexa Support;
 
-    //Witty Cloud Config
+    //Witty Cloud Config Move back to Witty Class
     static const int BUTTON = 4; // Define pin the button is connected to
     static const int LDR = A0;   // Define the analog pin the LDR is connected to
     static const int RedLed = D8;
     static const int GreenLed = D6;
     static const int BlueLed = D7;
 
+    //Use both Inbuilt led
     static const int InBuilt_Led = D4; // Led at esp 12 chip  and Inbuilt nodemcu is at D0 or gpio 16
 
     static const char *SSID;
@@ -48,12 +52,16 @@ public:
     static bool wifiConnected;
 
     //start-block2
-    static const IPAddress _IP; // = IPAddress(10, 0, 1, 78);
-    static const IPAddress _GW; // = IPAddress(10, 0, 1, 1);
-    static const IPAddress _SN; // = IPAddress(255, 255, 255, 0);
+    static const IPAddress _IP; 
+    static const IPAddress _GW; 
+    static const IPAddress _SN; 
 
-    //static void Config();
     static void OperateRelay(int switchIndex, int onOff);
+    static void SetUpRelaySwitch();
+    static void SetUpRetroSwitch();
+     //Retrofitting switches 
+  static void WeMoRetroSwitchLoop();
+
 };
 
 #endif

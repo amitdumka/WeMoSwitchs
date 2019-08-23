@@ -23,8 +23,6 @@ public:
   
    static int btn_Status;
 
-  static bool wifiConnected;
-
   bool connectWifi();
   void InitWitty();
   void InitWitty(bool isConnected);
