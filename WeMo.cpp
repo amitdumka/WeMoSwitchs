@@ -35,4 +35,7 @@ void WeMo::OperateRelay(int switchIndex, int onOff)
     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on by making the voltage LOW
     delay(1000);                     // Wait for a second
     digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off by making the voltage HIGH
+    // Make it perfect
+    saveRelayConfiguration(WeMo::RelayNames[switchIndex],onOff,WeMo::RelayNames[switchIndex]+switchIndex,WeMo::isRelayOn[switchIndex]);
+  
 }

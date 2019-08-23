@@ -1,4 +1,5 @@
 #include "Util.h"
+//CallWifiManager to connect wifi
 bool CallWiFiManager(bool isNew)
 {
     Serial.println("WiFi Manager is started...");
@@ -22,9 +23,8 @@ bool CallWiFiManager(bool isNew)
     Serial.println(WiFi.localIP());
     return WeMo::wifiConnected;
 }
-//static const String ConfigFileName = "/config.json";
-//Saving Config File
 
+/**Reading Config File*/
 bool ReadConfigFile()
 {
     Serial.println("\nmounting FS for reading ");
@@ -106,11 +106,10 @@ bool saveConfiguration()
         return false;
     }
 }
-// Prints the content of a file to the Serial
 
+// Prints the content of a file to the Serial
 void printFile(const char *filename)
 {
-
     if (SPIFFS.begin())
     {
         if (SPIFFS.exists(ConfigFileName))
@@ -138,5 +137,43 @@ void printFile(const char *filename)
     else
     {
         Serial.println("File sys mounting failed");
+    }
+}
+
+
+//Saving Spefic Setting
+bool saveRelayConfiguration(String sName, int value, String sName2, bool value2)
+{
+    Serial.println("mounting FS...for saving");
+    if (SPIFFS.begin())
+    {
+        Serial.println("mounted file system");
+        if (!SPIFFS.exists(ConfigFileName))
+        {
+            Serial.println("File Doesnt exist...");
+        }
+        File file = SPIFFS.open(ConfigFileName, "w");
+        if (!file)
+        {
+            Serial.println(F("Failed to create file"));
+            return false;
+        }
+        StaticJsonDocument<256> doc;
+        doc[sName]=value;
+        doc[sName2]=value2;
+        // Serialize JSON to file
+        if (serializeJson(doc, file) == 0)
+        {
+            Serial.println(F("Failed to write to file"));
+            return false;
+        }Serial.println("file saved");
+        // Close the file
+        file.close();
+        return true;
+    }
+    else
+    {
+        Serial.println("mounted file system failed");
+        return false;
     }
 }

@@ -24,27 +24,37 @@ static const double DeviceId = 5458979879;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(9600); // Can be increase based on board
+
   //Load Config File
   if (!ReadConfigFile())
   { //SaVe ConfigFile
     saveConfiguration();
+    Serial.println("Saving Config File for first run");
   }
-  //PrintConfig();
-  printFile(ConfigFileName.c_str());
+ // printFile(ConfigFileName.c_str()); For Debug Purpose if it read or not
+  
   wittyB.InitWitty(false);
   weMo = new WeMoSwitch(wittyB);
   Serial.println("Witty Board Init  done");
-  webServer = new WebServer(80);
-  webServer->StartWebServer();
+  
   weMo->initWemoSwitch();
   Serial.println("Wemos Switch init done");
+  webServer = new WebServer(80);
+  webServer->StartWebServer();
+  
   if (MDNS.begin("amitiot"))
   {
     Serial.println("MDNS responder started: amitiot");
     // Add service to MDNS-SD
     MDNS.addService("http", "tcp", 80);
   }
+  
+
+  Serial.println(ESP.getChipId());
+  Serial1.println(ESP.getFlashChipId());
+  Serial.println(ESP8266_CLOCK);
+  
 } // end of Setup
 
 void loop()

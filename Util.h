@@ -14,5 +14,6 @@ bool CallWiFiManager(bool isNew);
 bool ReadConfigFile();
 bool saveConfiguration();
 void printFile(const char *filename);
+bool saveRelayConfiguration(String sName, int value, String sName2, bool value2);
 
 #endif
