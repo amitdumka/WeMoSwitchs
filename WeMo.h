@@ -64,4 +64,17 @@ public:
 
 };
 
+
+class WeMo_NodeMCU{
+
+};
+class WeMo_ESP32{
+
+};
+class WeMo_Witty{
+
+};
+
+
 #endif
+

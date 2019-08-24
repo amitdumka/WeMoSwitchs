@@ -16,7 +16,7 @@ static const double DeviceId = 5458979879;
 
 void setup()
 {
-  Serial.begin(9600); // Can be increase based on board
+  Serial.begin(115200); // Can be increase based on board
 
   //Load Config File
   if (!ReadConfigFile())
