@@ -2,52 +2,34 @@
 
 int Witty::btn_Status = HIGH;
 
-
 void Witty::InitWitty()
 {
   //Wity Init
-  pinMode(WeMo::RedLed, OUTPUT);
-  pinMode(WeMo::GreenLed, OUTPUT);
-  pinMode(WeMo::BlueLed, OUTPUT);
-  pinMode(WeMo::BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+  pinMode(Witty::RedLed, OUTPUT);
+  pinMode(GreenLed, OUTPUT);
+  pinMode(BlueLed, OUTPUT);
+  pinMode(BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
 
-  digitalWrite(WeMo::BlueLed, HIGH);
+  digitalWrite(BlueLed, HIGH);
   Serial.println("Witty Init  done");
   delay(2000);
-  digitalWrite(WeMo::BlueLed, LOW);
-
-  int c = 3;
-  do
-  {
-    //int c=3;
-    if (WeMo::wifiConnected)
-    {
-      LedStatus(WeMo::wifiConnected);
-      break;
-    }
-
-    WeMo::wifiConnected = connectWifi();
-    if (WeMo::wifiConnected)
-      c = 0;
-    else
-      c = c - 1;
-
-  } while (c > 0);
+  digitalWrite(BlueLed, LOW);
+  LedStatus(WeMo::wifiConnected);
 
 } // end of Init
 
 void Witty::InitWitty(bool isConnected, bool isConfiged)
 {
   //Wity Init
-  pinMode(WeMo::RedLed, OUTPUT);
-  pinMode(WeMo::GreenLed, OUTPUT);
-  pinMode(WeMo::BlueLed, OUTPUT);
-  pinMode(WeMo::BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+  pinMode(RedLed, OUTPUT);
+  pinMode(GreenLed, OUTPUT);
+  pinMode(BlueLed, OUTPUT);
+  pinMode(BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
 
-  digitalWrite(WeMo::BlueLed, HIGH);
+  digitalWrite(BlueLed, HIGH);
   Serial.println("Witty Init  done");
   delay(2000);
-  digitalWrite(WeMo::BlueLed, LOW);
+  digitalWrite(BlueLed, LOW);
   if (isConfiged)
   {
     // Read all relay sate and set it  here
@@ -63,79 +45,51 @@ void Witty::InitWitty(bool isConnected, bool isConfiged)
 void Witty::InitWitty(bool isConnected)
 {
   //Wity Init
-  pinMode(WeMo::RedLed, OUTPUT);
-  pinMode(WeMo::GreenLed, OUTPUT);
-  pinMode(WeMo::BlueLed, OUTPUT);
-  pinMode(WeMo::BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
+  pinMode(RedLed, OUTPUT);
+  pinMode(GreenLed, OUTPUT);
+  pinMode(BlueLed, OUTPUT);
+  pinMode(BUTTON, INPUT_PULLUP); // Initialize button pin with built-in pullup.
 
-  digitalWrite(WeMo::BlueLed, HIGH);
+  digitalWrite(BlueLed, HIGH);
   Serial.println("Witty Init  done");
   delay(2000);
-  digitalWrite(WeMo::BlueLed, LOW);
+  digitalWrite(BlueLed, LOW);
 
   if (!isConnected)
-    {
-      digitalWrite(WeMo::BlueLed, HIGH);// option to make blinking till become green
-      WeMo::wifiConnected = CallWiFiManager(false);
-    }
-    LedStatus(WeMo::wifiConnected);
+  {
+    digitalWrite(BlueLed, HIGH); // option to make blinking till become green
+    WeMo::wifiConnected = CallWiFiManager(false);
+  }
+  LedStatus(WeMo::wifiConnected);
 
 } // end of Init(true)
 
 void Witty::SetLedDigital(int r, int g, int b)
 {
-  digitalWrite(WeMo::RedLed, r);
-  digitalWrite(WeMo::GreenLed, g);
-  digitalWrite(WeMo::BlueLed, b);
+  digitalWrite(RedLed, r);
+  digitalWrite(GreenLed, g);
+  digitalWrite(BlueLed, b);
 }
 
 void Witty::SetLedAnalog(int r, int g, int b)
 {
-  analogWrite(WeMo::RedLed, r);
-  analogWrite(WeMo::GreenLed, g);
-  analogWrite(WeMo::BlueLed, b);
+  analogWrite(RedLed, r);
+  analogWrite(GreenLed, g);
+  analogWrite(BlueLed, b);
 }
 
 bool Witty::setLedColor(int r, int g, int b)
 {
-  analogWrite(WeMo::RedLed, random(r, 1023));
-  analogWrite(WeMo::GreenLed, random(g, 1023));
-  analogWrite(WeMo::BlueLed, random(b, 1023));
+  analogWrite(RedLed, random(r, 1023));
+  analogWrite(GreenLed, random(g, 1023));
+  analogWrite(BlueLed, random(b, 1023));
   return true;
-}
-
-bool Witty::connectWifi()
-{
-  boolean state = true;
-  int i = 0;
-  WiFi.mode(WeMo::WiFiMode);
-  WiFi.begin(WeMo::SSID, WeMo::password);
-  Serial.println("Connecting to WiFi");
-
-  // Wait for connection
-  Serial.print("Connecting ...");
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(500);
-    Serial.print(".");
-    analogWrite(WeMo::BlueLed, random(0, 1023));
-    if (i > 10)
-    {
-      state = false;
-      break;
-    }
-    i++;
-  }
-  digitalWrite(WeMo::BlueLed, LOW);
-  LedStatus(state);
-  WeMo::wifiConnected=state;
-  return state;
 }
 
 int Witty::isButtonPressed()
 {
   //Call this function in loop with better use case
-  return digitalRead(WeMo::BUTTON);
+  return digitalRead(BUTTON);
 }
 bool Witty::HandelButton(CallbackFunction cb)
 {
@@ -144,8 +98,6 @@ bool Witty::HandelButton(CallbackFunction cb)
 }
 bool Witty::ResetDevice()
 {
-  //TODO: add code to reset device.
-  //ESP.restart();
   ESP.reset();
   return true;
 }
@@ -154,14 +106,14 @@ bool Witty::ReconnectWifi()
 {
   if (!WeMo::wifiConnected)
   {
-    WeMo::wifiConnected = connectWifi();
+    ESP.reset();
   }
   return WeMo::wifiConnected;
 }
 
 void Witty::LedStatus(bool isConnected)
 {
-  digitalWrite(WeMo::BlueLed, LOW);
+  digitalWrite(BlueLed, LOW);
   if (isConnected)
   {
     Serial.println("");
@@ -169,13 +121,13 @@ void Witty::LedStatus(bool isConnected)
     Serial.println(WiFi.SSID());
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
-    digitalWrite(WeMo::GreenLed, HIGH);
-    digitalWrite(WeMo::RedLed, LOW);
+    digitalWrite(GreenLed, HIGH);
+    digitalWrite(RedLed, LOW);
   }
   else
   {
     Serial.println("");
     Serial.println("Connection failed.");
-    digitalWrite(WeMo::RedLed, HIGH);
+    digitalWrite(RedLed, HIGH);
   }
 }

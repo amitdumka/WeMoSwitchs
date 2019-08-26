@@ -21,10 +21,12 @@ bool WeMoSwitch::initWemoSwitch()
   if (WeMo::wifiConnected)
   {
     upnpBroadcastResponder.beginUdpMulticast();
+    *relaySwitch= new Switch[WeMo::NoOfRelay];
+   
     // Define your switches here. Max 10
     for (int i = 0; i < WeMo::NoOfRelay; i++)
     {
-      // Format: Alexa invocation name, local port no, on callback, off callback
+      // Format: Alexa invocation name, local port no, on callback, off callback ,Index of Switch. 
       relaySwitch[i] = new Switch(WeMo::RelayNames[i], WeMo::RelayPort[i], SwitchOn, SwitchOff, i);
       upnpBroadcastResponder.addDevice(*relaySwitch[i]);
     }
@@ -58,13 +60,12 @@ void WeMoSwitch::wemoSwitchLoop()
   }
 }
 
-//On/Off Callback function. ("Note: If every thing is static , then also no problem, most of thing will fixed a board and one board will not call more than one object. ");
+//On/Off Callback function. 
+//("Note: If every thing is static , then also no problem, most of thing will fixed a board and one board will not call more than one object. ");
 
 bool WeMoSwitch::SwitchOff(int index)
 {
-  Serial.print("Switch ");
-  Serial.print(index + 1);
-  Serial.println(" is turning off");
+  Serial.print(" Turning Off Switch");Serial.println(index + 1);
   WeMo::isRelayOn[index] = false;
   WeMo::OperateRelay(index, LOW);
   saveRelayConfiguration(WeMo::RelayNames[index], 0, WeMo::RelayNames[index] + index, false);
@@ -73,9 +74,7 @@ bool WeMoSwitch::SwitchOff(int index)
 
 bool WeMoSwitch::SwitchOn(int index)
 {
-  Serial.print("Switch ");
-  Serial.print(index + 1);
-  Serial.println(" is turning on");
+  Serial.print(" Turning ON Switch");Serial.println(index + 1);
   WeMo::isRelayOn[index] = true;
   WeMo::OperateRelay(index, HIGH);
   saveRelayConfiguration(WeMo::RelayNames[index], 1, WeMo::RelayNames[index] + index, true);

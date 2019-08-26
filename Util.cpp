@@ -144,6 +144,7 @@ void printFile(const char *filename)
 //Saving Spefic Setting
 bool saveRelayConfiguration(String sName, int value, String sName2, bool value2)
 {
+    //TODO: Have to  make specific value  either one or two. need to check with retroSwitch
     Serial.println("mounting FS...for saving");
     if (SPIFFS.begin())
     {
