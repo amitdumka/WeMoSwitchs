@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include "Config.h"
 
 class WeMo_NodeMCU
 {
@@ -13,11 +14,11 @@ private:
     //Final Input Pin Will Be  10, 9, 16, 13
     //Final Output Pin Will Be 5, 4, 14, 12
 
-    static const int MaxInputPin = 4;
+    static const int MaxInputPin = 4;   
     static const int MaxOutPutPin = 4;
 
-    static int InputSwitchList[MaxInputPin]; //={34,35,35,39,27,16,17,12};
-    static int RelayPinList[MaxOutPutPin];   //=   {32,33,25,26,21,22,04,02};
+    static int InputSwitchList[MaxInputPin]; 
+    static int RelayPinList[MaxOutPutPin];   
 
 public:
     void Setup();
@@ -35,14 +36,21 @@ int WeMo_NodeMCU::RelayPinList[MaxOutPutPin] = {9, 10, 13, 16};
 
 void WeMo_NodeMCU::Setup()
 {
-    // Set input Pin Mode
-    for (int i = 0; i < MaxInputPin; i++)
-    {
+    // Assining values to WeMo Config. and Making all variable static data to static
+    //These data can be used to restore data in the event of crashing or errors.
+
+    // Pin config
+    for(int i=0 ; i<MaxOutPutPin;i++){
+        WeMo::RelayPins[i]=RelayPinList[i];
+        WeMo::RelayInputPin[i]=InputSwitchList[i];
         pinMode(InputSwitchList[i], INPUT);
         pinMode(RelayPinList[i], OUTPUT);
     }
+ 
 }
 
 void WeMo_NodeMCU::Loop()
 {
+    // TODO: Check What else code can be written . 
+    //Any NodeMCU based code be added here. 
 }

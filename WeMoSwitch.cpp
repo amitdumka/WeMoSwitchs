@@ -1,9 +1,12 @@
 #include "WemoSwitch.h"
 
+
 //<<constructor>>
 WeMoSwitch::WeMoSwitch()
 {
 
+  
+  
   if (!WeMo::wifiConnected)
     Serial.println("Wifi is not Connected");
 }
@@ -21,7 +24,7 @@ bool WeMoSwitch::initWemoSwitch()
   if (WeMo::wifiConnected)
   {
     upnpBroadcastResponder.beginUdpMulticast();
-    *relaySwitch= new Switch[WeMo::NoOfRelay];
+    //*relaySwitch= new Switch[WeMo::NoOfRelay];  // TODO:solve this error
    
     // Define your switches here. Max 10
     for (int i = 0; i < WeMo::NoOfRelay; i++)

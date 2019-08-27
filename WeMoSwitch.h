@@ -16,7 +16,8 @@ class WeMoSwitch
 {
 private:
   int counter = 10;
-  Switch *relaySwitch[];
+  //const int SwitchCount=WeMo::NoOfRelay;
+  Switch *relaySwitch[WeMo::NoOfRelay];
   UpnpBroadcastResponder upnpBroadcastResponder;
  //Callback function for On/Off
 static bool SwitchOn(int );

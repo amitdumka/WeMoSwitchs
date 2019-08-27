@@ -4,10 +4,7 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include "Util.h"
-
-//By Default WeMo will be NodeMcu mode. you can change either by function or you can hard code . as most of code is fixed. 
-// You can add Temp and humdity module based on board selected.
-//There Will be sensor section Which need to be activated. Wait for Version 2.0
+#include "Config.h"
 
 class WeMo
 {
@@ -15,18 +12,40 @@ public:
   static const double Device_Id;
   static const String Activation_Code;
 
-  static  int NoOfRelay; //= 4;  // Change based on project
-  static  int NoOfSwitch;// =4; // Change based on project
+#ifdef NODEMCU
+  static const int NoOfRelay = 4; // Change based on project
+#ifdef RetroSwitch
+  static const int NoOfSwitch = 4; // Change based on project
+#endif
+#endif
 
+#ifdef ESP32
+  static const int NoOfRelay = 8; // Change based on project
+#ifdef RetroSwitch
+  static const int NoOfSwitch = 8; // Change based on project
+#endif
+#endif
+
+#ifdef WITTY
+#ifdef RetroSwitch
+  static const int NoOfRelay = 2;  // Change based on project
+  static const int NoOfSwitch = 2; // Change based on project
+#else
+  static const int NoOfRelay = 3; // Change based on project
+#endif
+#endif
+
+#ifdef RetroSwitch
   static int RelayInputPin[]; //input pin for retrofitting swicthes
   static int RelayStatus[];   //need to check if Any use is there
+#endif
 
   static int RelayPins[];
   static String RelayNames[];
   static bool isRelayOn[];
-
+#ifdef Alexa
   static int RelayPort[]; //For Alexa Support;
-
+#endif
   //Use both Inbuilt led
   static const int InBuilt_Led = D4; // Led at esp 12 chip  and Inbuilt nodemcu is at D0 or gpio 16
 
@@ -39,9 +58,10 @@ public:
   static const int WebServerHTTP_Port = 80;
   static const int WebServerHTTPS_Port = 443;
 
+#ifdef Alexa
   static const int StartPort = 81;
   static const int LastPort = 90; //Max Switch /Replay can be handle by Alexa WeMos
-
+#endif
   static bool isAPOn;
   static bool isAPRequired;
   static const String AP_Name;
@@ -55,9 +75,12 @@ public:
 
   static void OperateRelay(int switchIndex, int onOff);
   static void SetUpRelaySwitch();
-  static void SetUpRetroSwitch();
+
+#ifdef RetroSwitch
   //Retrofitting switches
+  static void SetUpRetroSwitch();
   static void WeMoRetroSwitchLoop();
+#endif
 };
 
 #endif
