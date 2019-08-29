@@ -19,11 +19,14 @@ private:
 public:
     static float Temp_C;
     static float Humidity;
+    static float HeadIndex;
 
     Tempature(int pin, int senType);
     float readDHTHumidity();
 
     float readDHTTemperature();
+
+    float readDHTHeatIndex();
 };
 
 #endif

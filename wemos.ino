@@ -8,6 +8,9 @@
 #include <functional>
 #include "Util.h"
 #include "Config.h"
+#ifdef MQTT
+#include"mqttserver.h"
+#endif
 
 #ifdef WEBSERVER
 #include "WebServer.h"
