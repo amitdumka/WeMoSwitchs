@@ -6,8 +6,6 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-#include <Bounce2.h>
-#include <DHT.h>
 #include <string.h>
 
 // MQTT
@@ -30,6 +28,8 @@ private:
     static String MQTT_UserName;
     static String MQTT_Password;
     static String MQTT_Client_ID;
+    long lastReconnectAttempt = 0;
+
 
     WiFiClient espClient;
     PubSubClient client;
@@ -57,7 +57,9 @@ public:
 
     void SetUp(MQTT_Handler handler);
     void Loop();
+    void LoopMQTT();
     void Connect();
+    boolean reconnect();
     bool BasicHandler(String topic); //TODO: Must be called on callback Handler. Other wise it can fail.
 
     void Publish(const char * topic, const char * payload);
@@ -132,14 +134,15 @@ bool MQTT_Client::BasicHandler(String topicStr)
     if ((String)swVerTopic == topicStr)
     {
         client.publish(swVerConfirmTopic, swVersion.c_str());
-        return;
+        return true;
     }
 
     if ((String)swVerThisDeviceTopic == topicStr)
     {
         client.publish(swVerConfirmTopic, swVersion.c_str());
-        return;
+        return true;
     }
+    return false;
 }
 
 //generate unique name from MAC addr
@@ -196,4 +199,35 @@ void MQTT_Client::Connect()
             }
         }
     }
+}
+
+
+void MQTT_Client::LoopMQTT()
+{
+  if (!client.connected()) {
+    long now = millis();
+    if (now - lastReconnectAttempt > 5000) {
+      lastReconnectAttempt = now;
+      // Attempt to reconnect
+      if (reconnect()) {
+        lastReconnectAttempt = 0;
+      }
+    }
+  } else {
+    // Client connected
+
+    client.loop();
+  }
+
+}
+
+
+boolean MQTT_Client::reconnect() {
+  if (client.connect("arduinoClient")) {
+    // Once connected, publish an announcement...
+    client.publish("outTopic","hello world");
+    // ... and resubscribe
+    client.subscribe("inTopic");
+  }
+  return client.connected();
 }

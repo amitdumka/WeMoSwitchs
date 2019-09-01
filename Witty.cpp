@@ -131,3 +131,16 @@ void Witty::LedStatus(bool isConnected)
     digitalWrite(RedLed, HIGH);
   }
 }
+
+void Witty::ButtonLoop(){
+  // When Inbuilt flash Button is pressed , It will trigger Esp reset
+  if (isButtonPressed() == LOW)
+  {
+    Serial.println("Button is pressed...");
+    delay(200);
+    Serial.println("Reseting device....");
+    ResetDevice();
+    delay(200);
+  }
+
+}

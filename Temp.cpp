@@ -10,7 +10,29 @@ Tempature::Tempature(int pin, int senType)
     DHTType = senType;
     dht= DHT(DHTPin, DHTType);
 }
+float Tempature::ReadDHTSenor(){
+    Humidity = dht.readHumidity();
+    Temp_C = dht.readTemperature();
+    if (isnan(Humidity) ||isnan(Temp_C))
+    {
+        Serial.println("Failed to read from DHT sensor!");
+        return -999.99;
+    }
+    else
+    {
+        HeatIndex = dht.computeHeatIndex(Temp_C, Humidity, false); // Compute heat index in Celsius
+        Serial.print("Humidity: ");
+        Serial.println(Humidity);
+        Serial.print("Temp: ");
+        Serial.println(Temp_C);
+        Serial.print("Heat Index: ");
+        Serial.println(HeatIndex);
+        
+        return Temp_C;
+    }
+    
 
+}
 float Tempature::readDHTHumidity()
 {
     Humidity = dht.readHumidity();
@@ -44,7 +66,7 @@ float Tempature::readDHTTemperature()
 
 float Tempature::readDHTHeatIndex(){
     readDHTHumidity();readDHTTemperature();
-    HeadIndex = dht.computeHeatIndex(Temp_C, Humidity, false); // Compute heat index in Celsius
-    return HeadIndex;
+    HeatIndex = dht.computeHeatIndex(Temp_C, Humidity, false); // Compute heat index in Celsius
+    return HeatIndex;
     
 }

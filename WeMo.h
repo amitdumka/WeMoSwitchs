@@ -1,17 +1,19 @@
 #ifndef WEMO_H
 #define WEMO_H
 
+#include "Config.h"
+#include "Util.h"
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include "Util.h"
-#include "Config.h"
 
 class WeMo
 {
-public:
+  private: 
   static const double Device_Id;
   static const String Activation_Code;
 
+public:
+  
 #ifdef NODEMCU
   static const int NoOfRelay = 4; // Change based on project
 #ifdef RetroSwitch
@@ -26,7 +28,7 @@ public:
 #endif
 #endif
 
-#ifdef WITTY
+#ifdef WITTY  // Make is senor based or single switch model 
 #ifdef RetroSwitch
   static const int NoOfRelay = 2;  // Change based on project
   static const int NoOfSwitch = 2; // Change based on project
@@ -81,6 +83,10 @@ public:
   static void SetUpRetroSwitch();
   static void WeMoRetroSwitchLoop();
 #endif
+
+static void ProcessProcessConfigData();
+
+
 };
 
 #endif

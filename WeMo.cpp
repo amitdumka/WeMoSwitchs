@@ -1,8 +1,8 @@
 #include "WeMo.h"
 
 const String WeMo::Activation_Code = "Att01@24";
-#ifdef NODEMCU
 
+#ifdef NODEMCU
 String WeMo::RelayNames[] = {"Switch 1", "Switch 2", "Switch 3", "Switch 4"};
 int WeMo::RelayPins[] = {19, 10, 13, 16};
 bool WeMo::isRelayOn[] = {false, false, false, false};
@@ -114,8 +114,8 @@ void WeMo::SetUpRelaySwitch()
     {
         pinMode(WeMo::RelayPins[i], OUTPUT);
     }
-    
-    pinMode(WeMo::InBuilt_Led,OUTPUT);//InBuilt LED  D4/02 ESP12
+
+    pinMode(WeMo::InBuilt_Led, OUTPUT); //InBuilt LED  D4/02 ESP12
 }
 #ifdef RetroSwitch
 //Setup Input pin mode Check for uses and way
@@ -146,3 +146,15 @@ void WeMo::WeMoRetroSwitchLoop()
     }
 }
 #endif
+
+ void WeMo::ProcessProcessConfigData()
+{
+    //Serial.begin(115200); // Can be increase based on board
+
+    //Load Config File
+    if (!ReadConfigFile())
+    { //SaVe ConfigFile
+        saveConfiguration();
+        Serial.println("Saving Config File for first run");
+    }
+}

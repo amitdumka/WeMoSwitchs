@@ -1,9 +1,12 @@
 #ifndef SWITCH_H
 #define SWITCH_H
 
+#include "Config.h"
 #include <Arduino.h>
+#ifdef NODEMCU
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#endif
 #include <WiFiUDP.h>
 #include "CallbackFunction.h"
 

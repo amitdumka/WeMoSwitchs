@@ -45,6 +45,8 @@ public:
   bool ResetDevice();
   bool ReconnectWifi();
   void LedStatus(bool isConnecte);
+
+  void ButtonLoop();
 };
 
 #endif

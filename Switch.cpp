@@ -1,5 +1,4 @@
 #include "Switch.h"
-#include "CallbackFunction.h"
 
 //<<constructor>>
 Switch::Switch()
